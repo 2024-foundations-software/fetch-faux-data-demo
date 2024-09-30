@@ -43,8 +43,8 @@ This project is a simple React application that demonstrates how to fetch data f
 
 ### Prerequisites
 
-- Node.js (version 14 or higher)
-- npm (version 6 or higher)
+- Node.js (version 20 or higher)
+- npm (version 9 or higher)
 
 ### Installation
 
