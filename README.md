@@ -1,8 +1,9 @@
-### Example React Application with Vite to demonstrate how to get data from the API and display it in a table format.
+# Example React Application 
+## A demonstration of how to get data from the API and display it in a table format.
 
 This project is a simple React application that demonstrates how to fetch data from an API and display it in a table format. The application fetches data from a the faux-data server https://bc-cancer-faux.onrender.com/
 
-This is a simple example to demonstrate how to use Vite to create a React application and fetch data from an API. The application consists of a `ControlPanel` component that manages the state and logic for displaying different tabs and their respective content. The tabs include `Donors`, `Events`, and `Cities`. Each tab displays data in a table format.
+ The application consists of a `ControlPanel` component that manages the state and logic for displaying different tabs and their respective content. The tabs include `Donors`, `Event Set Up`, and `Event Review`. Each tab displays data in a table format.
 
 
 
@@ -49,5 +50,37 @@ This is a simple example to demonstrate how to use Vite to create a React applic
 
 1. Clone the repository:
    ```sh
-   git clone git@github.com:2024-foundations-software/fetch-faux-data-demo.git
-   cd <repository-directory>
+   git clone https://github.com/2024-foundations-software/fetch-faux-data-demo.git
+   cd <fetch-faux-data-demo>
+   npm install
+   npm run dev
+   ```
+2. Open your browser and navigate to `http://localhost:5173/` to view the application.
+
+
+## Components Overview
+
+### `App.tsx`
+
+The `App` component serves as the root component of the application. It is responsible for rendering the main `ControlPanel` component.
+
+### `ControlPanel.tsx`
+
+The `ControlPanel` component is the main component that manages the state and logic for displaying different tabs and their respective content. It includes functionalities for selecting cities, fetching event data, and managing tabs.
+
+### `Cities.tsx`
+
+The `Cities` component is responsible for managing and displaying city-related data.  It also provides a selection for each city.  This is used in setting up the cities for the request to set up an event.
+
+### `DonorTable.tsx`
+
+The `DonorTable` component displays donor-related data in a table format.  This gets all of the donors up to a limit defined in an input field.
+
+### `EventTable.tsx`
+
+The `EventTable` component displays event-related data in a table format.  This displays all of the donors who might potentially attend an event in a city, or a number of cities.
+
+### Disclaimer
+
+This code is provided as is.  It is intended for educational purposes only and should not be used in production environments without proper testing and validation.
+
