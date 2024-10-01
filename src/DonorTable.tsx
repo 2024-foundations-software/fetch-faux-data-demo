@@ -27,7 +27,7 @@ function DonorTable() {
      */
     useEffect(() => {
         // Fetch data from the API
-        fetch(`https://bc-cancer-faux.onrender.com/event?cities=Vancouver&limit=${limit}&format=json`)
+        fetch(`https://bc-cancer-faux.onrender.com/donors?limit=${limit}&format=json`)
             .then((response) => response.json()) // Parse the JSON response
             .then((data: ApiResponse) => {
                 // Update the state with the fetched headers and rows

@@ -51,7 +51,7 @@ This project is a simple React application that demonstrates how to fetch data f
 1. Clone the repository:
    ```sh
    git clone https://github.com/2024-foundations-software/fetch-faux-data-demo.git
-   cd <fetch-faux-data-demo>
+   cd fetch-faux-data-demo
    npm install
    npm run dev
    ```
