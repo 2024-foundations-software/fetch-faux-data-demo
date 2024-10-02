@@ -11,7 +11,13 @@ const ItemCreator: React.FC = () => {
         comments: [],
         taskDescription: ''
     });
-    const [user, setUser] = useState('');
+
+
+    const getCurrentTaskName = () => {
+        return sessionStorage.getItem('5500task') || '';
+    };
+
+    const [currentTaskName, setCurrentTaskName] = useState<string>(getCurrentTaskName());
     const [tasks, setTasks] = useState<TaskSchema[]>([]);
 
     useEffect(() => {
@@ -22,14 +28,14 @@ const ItemCreator: React.FC = () => {
 
     }, []);
 
+
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setTask((prevTask: any) => ({ ...prevTask, [name]: value }));
     };
 
-    const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUser(e.target.value);
-    };
+
 
     const updateTasks = (tasks: TaskSchema) => {
         console.log(tasks);
@@ -76,7 +82,8 @@ const ItemCreator: React.FC = () => {
             });
     };
     const handleSaveTaskName = (taskName: string) => {
-        localStorage.setItem('5500task', taskName);
+        sessionStorage.setItem('5500task', taskName);
+        setCurrentTaskName(taskName);
         console.log(`Task name ${taskName} saved to localStorage with key 5500task`);
     };
 
@@ -150,7 +157,7 @@ const ItemCreator: React.FC = () => {
                                 color="primary"
                                 onClick={() => handleSaveTaskName(task.taskName)}
                             >
-                                Save Task
+                                {currentTaskName === task.taskName ? 'Current' : 'Edit'}
                             </Button>
                         </ListItem>
                     ))}

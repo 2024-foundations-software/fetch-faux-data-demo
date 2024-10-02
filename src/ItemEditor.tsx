@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Snackbar, Alert } from '@mui/material';
-import { TaskSchema } from './TaskSchema';
+import { TaskSchema } from './ItemCheckerDemo/src/TaskSchema';
 
 const ItemEditor: React.FC = () => {
     const [task, setTask] = useState<TaskSchema | null>(null);
@@ -8,13 +8,12 @@ const ItemEditor: React.FC = () => {
     const [comment, setComment] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        const taskName = localStorage.getItem('5500task');
-        const username = localStorage.getItem('5500user');
-        if (username) {
-            setUser(username);
-        }
+        const taskName = sessionStorage.getItem('5500task');
+        const user = sessionStorage.getItem('5500user');
+        setUser(user || '');
         if (taskName) {
             fetch(`http://localhost:3500/tasks/${taskName}`)
                 .then(response => {
@@ -24,23 +23,25 @@ const ItemEditor: React.FC = () => {
                         throw new Error('Failed to fetch task details');
                     }
                 })
-                .then(data => setTask(data))
-                .catch(error => setError(error.message));
+                .then(data => {
+                    setTask(data);
+                    sessionStorage.setItem('5500taskdata', data);
+                    setLoading(false);
+                })
+                .catch(error => {
+                    setError(error.message);
+                    setLoading(false);
+                });
         } else {
-            setError('No task name found in localStorage');
+            setError('No task name found in sessionStorage');
+            setLoading(false);
         }
     }, []);
 
-    const updateTask = (task: TaskSchema) => {
-        console.log(task);
-        setTask(task);
-    }
-
     const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const username = e.target.value;
-        // store in local storage
-        localStorage.setItem('5500user', username);
-        setUser(e.target.value);
+        const user = e.target.value;
+        sessionStorage.setItem('5500user', user);
+        setUser(user);
     };
 
     const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,21 +59,18 @@ const ItemEditor: React.FC = () => {
             })
                 .then(response => {
                     if (response.ok) {
-
                         return response.json();
                     } else {
                         throw new Error('Failed to add comment');
                     }
                 })
                 .then(updatedTask => {
-
-                    console.log('Updated task:', updatedTask);
-                    updateTask(updatedTask);
+                    setTask(updatedTask);
+                    sessionStorage.setItem('5500taskdata', updatedTask);
                     setSuccess('Comment added successfully');
                     setComment('');
                 })
                 .catch(error => {
-                    console.error('Error adding comment:', error);
                     setError(error.message);
                 });
         }
@@ -83,12 +81,16 @@ const ItemEditor: React.FC = () => {
         setSuccess(null);
     };
 
+    const cachedTask = sessionStorage.getItem('5500taskdata') || task;
+    console.log('cachedTask', cachedTask);
     return (
         <Container>
             <Typography variant="h4" gutterBottom>
                 Task Details
             </Typography>
-            {task ? (
+            {loading ? (
+                <Typography variant="h6">Loading...</Typography>
+            ) : task ? (
                 <TableContainer component={Paper}>
                     <Table>
                         <TableHead>
@@ -122,11 +124,13 @@ const ItemEditor: React.FC = () => {
                                 <TableCell>Comments</TableCell>
                                 <TableCell>
                                     <ul>
-                                        {
-
+                                        {task.comments && Array.isArray(task.comments) ? (
                                             task.comments.map((comment, index) => (
                                                 <li key={index}>{comment}</li>
-                                            ))}
+                                            ))
+                                        ) : (
+                                            <li>No comments available</li>
+                                        )}
                                     </ul>
                                 </TableCell>
                             </TableRow>
@@ -135,7 +139,7 @@ const ItemEditor: React.FC = () => {
                 </TableContainer>
             ) : (
                 <Typography variant="h6" color="error">
-                    {error || 'Loading...'}
+                    {error || 'No task found'}
                 </Typography>
             )}
             <Paper elevation={3} style={{ padding: '16px', marginTop: '16px' }}>
