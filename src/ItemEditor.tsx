@@ -9,8 +9,9 @@ const ItemEditor: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    let cachedTask: TaskSchema | null = null;
 
-    useEffect(() => {
+    const updateTask = () => {
         const taskName = sessionStorage.getItem('5500task');
         const user = sessionStorage.getItem('5500user');
         setUser(user || '');
@@ -36,6 +37,10 @@ const ItemEditor: React.FC = () => {
             setError('No task name found in sessionStorage');
             setLoading(false);
         }
+    }
+
+    useEffect(() => {
+        updateTask();
     }, []);
 
     const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,17 +63,7 @@ const ItemEditor: React.FC = () => {
                 body: JSON.stringify({ comment, user })
             })
                 .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error('Failed to add comment');
-                    }
-                })
-                .then(updatedTask => {
-                    setTask(updatedTask);
-                    sessionStorage.setItem('5500taskdata', updatedTask);
-                    setSuccess('Comment added successfully');
-                    setComment('');
+                    updateTask();
                 })
                 .catch(error => {
                     setError(error.message);
@@ -81,8 +76,7 @@ const ItemEditor: React.FC = () => {
         setSuccess(null);
     };
 
-    const cachedTask = sessionStorage.getItem('5500taskdata') || task;
-    console.log('cachedTask', cachedTask);
+    console.log
     return (
         <Container>
             <Typography variant="h4" gutterBottom>

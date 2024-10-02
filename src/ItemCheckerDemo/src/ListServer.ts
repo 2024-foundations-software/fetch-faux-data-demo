@@ -40,12 +40,6 @@ app.post('/tasks/:taskName/comments', (req, res) => {
     const { taskName } = req.params;
     const { comment, user } = req.body;
     const [code, result] = listManager.addComment(taskName, comment, user);
-
-    if (code === 200) {
-        const task = listManager.getTask(taskName, user);
-        res.json(task);
-        return;
-    }
     res.status(code).send(result);
 });
 
