@@ -15,6 +15,20 @@
             ],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal"
-        }
+        },
+        {
+            "type": "node-terminal",
+            "name": "Jest ListManager",
+            "request": "launch",
+            "command": "npx jest ListManager",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "node-terminal",
+            "name": "Run Checker server",
+            "request": "launch",
+            "command": "ts-node src/ItemCheckerDemo/src/ListServer.ts",
+            "cwd": "${workspaceFolder}"
+        },
     ]
 }

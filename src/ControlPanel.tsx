@@ -3,6 +3,8 @@ import { Box, Button, Typography, Tabs, Tab, TextField } from '@mui/material';
 import DonorTable from './DonorTable';
 import Cities from './Cities';
 import EventTable from './EventTable';
+import ItemCreator from './ItemCreator';
+import ItemEditor from './ItemEditor';
 
 /**
  * The ControlPanel component is the main component that manages the state and logic
@@ -85,6 +87,8 @@ const ControlPanel: React.FC = () => {
                 <Tab label="Donors" />
                 <Tab label="Event Set Up" />
                 <Tab label="Event Review" />
+                <Tab label="Item Checker" />
+                <Tab label="Item Editor" />
             </Tabs>
 
             {/* Render the content based on the selected tab */}
@@ -135,9 +139,21 @@ const ControlPanel: React.FC = () => {
                     <EventTable headers={headers} data={data} />
                 </Box>
             )}
+
+            {tabIndex === 3 && (
+                <Box mt={4}>
+                    <ItemCreator />
+                </Box>
+            )}
+
+            {tabIndex === 4 && (
+                <Box mt={4}>
+                    <ItemEditor />
+                </Box>
+            )};
         </Box>
-    );
-};
+    )
+}
 
 // Export the ControlPanel component as the default export of this module
 export default ControlPanel;
