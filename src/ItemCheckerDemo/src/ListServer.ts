@@ -28,7 +28,7 @@ app.post('/tasks', (req, res) => {
 app.post('/tasks/create/:taskName', (req, res) => {
     const { taskName } = req.params;
     const { approver1, approver2, approver3, comments, taskDescription } = req.body;
-    const task: TaskSchema = { taskName, approver1, approver2, approver3, comments, taskDescription };
+    const task: TaskSchema = { taskName, approver1, approver2, approver3, comments, taskDescription, recommendation: "", decisionMaker: "" };
     const [code, message] = listManager.addTask(task);
 
     res.status(code).send(message);
@@ -40,6 +40,14 @@ app.post('/tasks/:taskName/comments', (req, res) => {
     const { taskName } = req.params;
     const { comment, user } = req.body;
     const [code, result] = listManager.addComment(taskName, comment, user);
+    res.status(code).send(result);
+});
+
+// Add a recommendation to a task
+app.post('/tasks/:taskName/recommendation', (req, res) => {
+    const { taskName } = req.params;
+    const { recommendation, user } = req.body;
+    const [code, result] = listManager.addRecommendation(taskName, recommendation, user);
     res.status(code).send(result);
 });
 

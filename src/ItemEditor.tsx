@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Snackbar, Alert } from '@mui/material';
-import { TaskSchema } from './ItemCheckerDemo/src/TaskSchema';
+import {
+    TextField, Button, Container,
+    FormControl, MenuItem, Typography, Table, TableBody,
+    TableCell, TableContainer, TableHead, TableRow,
+    Paper, Snackbar, Alert, InputLabel, Select, SelectChangeEvent
+} from '@mui/material';
+
+import { TaskSchema } from './TaskSchema';
 
 const ItemEditor: React.FC = () => {
     const [task, setTask] = useState<TaskSchema | null>(null);
@@ -9,7 +15,6 @@ const ItemEditor: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-    let cachedTask: TaskSchema | null = null;
 
     const updateTask = () => {
         const taskName = sessionStorage.getItem('5500task');
@@ -26,7 +31,7 @@ const ItemEditor: React.FC = () => {
                 })
                 .then(data => {
                     setTask(data);
-                    sessionStorage.setItem('5500taskdata', data);
+
                     setLoading(false);
                 })
                 .catch(error => {
@@ -41,7 +46,7 @@ const ItemEditor: React.FC = () => {
 
     useEffect(() => {
         updateTask();
-    }, []);
+    }, [task]);
 
     const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const user = e.target.value;
@@ -51,6 +56,14 @@ const ItemEditor: React.FC = () => {
 
     const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setComment(e.target.value);
+    };
+
+    const handleRecommendationChange = (e: SelectChangeEvent) => {
+        if (task) {
+            task.recommendation = e.target.value as TaskSchema['recommendation'];
+            task.decisionMaker = user;
+            setTask({ ...task, recommendation: e.target.value as TaskSchema['recommendation'] });
+        }
     };
 
     const handleAddComment = () => {
@@ -76,7 +89,6 @@ const ItemEditor: React.FC = () => {
         setSuccess(null);
     };
 
-    console.log
     return (
         <Container>
             <Typography variant="h4" gutterBottom>
@@ -115,11 +127,32 @@ const ItemEditor: React.FC = () => {
                                 <TableCell>{task.taskDescription}</TableCell>
                             </TableRow>
                             <TableRow>
+                                <TableCell>Recommendation</TableCell>
+                                <TableCell>
+                                    <FormControl fullWidth>
+                                        <InputLabel>Recommendation</InputLabel>
+                                        <Select
+                                            value={task.recommendation}
+                                            onChange={handleRecommendationChange}
+                                        >
+                                            <MenuItem value="">None</MenuItem>
+                                            <MenuItem value="Do the task">Do the task</MenuItem>
+                                            <MenuItem value="Delay the task">Delay the task</MenuItem>
+                                            <MenuItem value="Forget the task">Forget the task</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Decision Maker</TableCell>
+                                <TableCell>{task.decisionMaker}</TableCell>
+                            </TableRow>
+                            <TableRow>
                                 <TableCell>Comments</TableCell>
                                 <TableCell>
                                     <ul>
                                         {task.comments && Array.isArray(task.comments) ? (
-                                            task.comments.map((comment, index) => (
+                                            task.comments.map((comment: string, index: React.Key | null | undefined) => (
                                                 <li key={index}>{comment}</li>
                                             ))
                                         ) : (

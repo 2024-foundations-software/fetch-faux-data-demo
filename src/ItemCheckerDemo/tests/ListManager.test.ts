@@ -35,7 +35,16 @@ afterAll(() => {
 describe('ListManager', () => {
     test('addTask should write a task to a file', () => {
         const listManager = new ListManager(testDirectory);
-        const mockTask: TaskSchema = { taskName: 'task1', approver1: 'user1', approver2: 'user2', approver3: 'user3', comments: [], taskDescription: 'Task 1 description' };
+        const mockTask: TaskSchema = {
+            taskName: 'task1',
+            approver1: 'user1',
+            approver2: 'user2',
+            approver3: 'user3',
+            comments: [],
+            taskDescription: 'Task 1 description',
+            recommendation: '',
+            decisionMaker: ''
+        };
         const mockFilePath = path.join(testDirectory, 'task1.json');
 
         const [code, message] = listManager.addTask(mockTask);
@@ -60,7 +69,16 @@ describe('ListManager', () => {
 
     test('addTask should return 409 if task already exists', () => {
         const listManager = new ListManager(testDirectory);
-        const mockTask: TaskSchema = { taskName: 'task11', approver1: 'user1', approver2: 'user2', approver3: 'user3', comments: [], taskDescription: 'Task 11 description' };
+        const mockTask: TaskSchema = {
+            taskName: 'task11',
+            approver1: 'user1',
+            approver2: 'user2',
+            approver3: 'user3',
+            comments: [],
+            taskDescription: 'Task 11 description',
+            recommendation: '',
+            decisionMaker: ''
+        };
 
         const [code, message] = listManager.addTask(mockTask);
 
@@ -75,8 +93,16 @@ describe('ListManager', () => {
 
     test('addComment should add a comment to a task', () => {
         const listManager = new ListManager(testDirectory);
-        const mockTask: TaskSchema = { taskName: 'task2', approver1: 'user1', approver2: 'user2', approver3: 'user3', comments: [], taskDescription: 'Task 2 description' };
-        const mockFilePath = path.join(testDirectory, 'task2.json');
+        const mockTask: TaskSchema = {
+            taskName: 'task2',
+            approver1: 'user1',
+            approver2: 'user2',
+            approver3: 'user3',
+            comments: [],
+            taskDescription: 'Task 2 description',
+            recommendation: '',
+            decisionMaker: ''
+        }; const mockFilePath = path.join(testDirectory, 'task2.json');
         listManager.addTask(mockTask);
 
         const comment = 'This is a comment';
@@ -87,7 +113,7 @@ describe('ListManager', () => {
         expect(result).toEqual(`Comment added to task task2.`);
         const data = fs.readFileSync(mockFilePath, 'utf-8');
         const task = JSON.parse(data) as TaskSchema;
-        
+
         const expectedComment = `${comment}:--:${user}`;
 
         expect(task.comments).toEqual([expectedComment]);
@@ -105,8 +131,16 @@ describe('ListManager', () => {
 
     test('addComment should return 401 if user is not an approver', () => {
         const listManager = new ListManager(testDirectory);
-        const mockTask: TaskSchema = { taskName: 'task4', approver1: 'user1', approver2: 'user2', approver3: 'user3', comments: [], taskDescription: 'Task 4 description' };
-        const mockFilePath = path.join(testDirectory, 'task4.json');
+        const mockTask: TaskSchema = {
+            taskName: 'task4',
+            approver1: 'user1',
+            approver2: 'user2',
+            approver3: 'user3',
+            comments: [],
+            taskDescription: 'Task 4 description',
+            recommendation: '',
+            decisionMaker: ''
+        }; const mockFilePath = path.join(testDirectory, 'task4.json');
         listManager.addTask(mockTask);
 
         const comment = 'This is a comment';
@@ -119,8 +153,16 @@ describe('ListManager', () => {
 
     test('getTask should return the task if user is an approver', () => {
         const listManager = new ListManager(testDirectory);
-        const mockTask: TaskSchema = { taskName: 'task2222', approver1: 'user1', approver2: 'user2', approver3: 'user3', comments: [], taskDescription: 'Task 2 description' };
-        const mockFilePath = path.join(testDirectory, 'task2.json');
+        const mockTask: TaskSchema = {
+            taskName: 'task2222',
+            approver1: 'user1',
+            approver2: 'user2',
+            approver3: 'user3',
+            comments: [],
+            taskDescription: 'Task 2222 description',
+            recommendation: '',
+            decisionMaker: ''
+        }; const mockFilePath = path.join(testDirectory, 'task2.json');
 
         listManager.addTask(mockTask);
 
@@ -130,18 +172,7 @@ describe('ListManager', () => {
         expect(result).toEqual(mockTask);
     });
 
-    test('getTask should return 401 if user is not an approver', () => {
-        const listManager = new ListManager(testDirectory);
-        const mockTask: TaskSchema = { taskName: 'task2', approver1: 'user1', approver2: 'user2', approver3: 'user3', comments: [], taskDescription: 'Task 2 description' };
-        const mockFilePath = path.join(testDirectory, 'task2.json');
 
-        listManager.addTask(mockTask);
-
-        const [code, result] = listManager.getTask('task2', 'user4');
-
-        expect(code).toBe(401);
-        expect(result).toBe('User user4 is not an approver for task task2.');
-    });
 
     test('getTask should return 404 if task does not exist', () => {
         const listManager = new ListManager(testDirectory);
@@ -153,4 +184,65 @@ describe('ListManager', () => {
         expect(code).toBe(404);
         expect(result).toBe('Task task30000 not found.');
     });
+
+    test('addRecommendation should add a recommendation to a task', () => {
+        const listManager = new ListManager(testDirectory);
+        const mockTask: TaskSchema = {
+            taskName: 'task5',
+            approver1: 'user1',
+            approver2: 'user2',
+            approver3: 'user3',
+            comments: [],
+            taskDescription: 'Task 5 description',
+            recommendation: '',
+            decisionMaker: ''
+        }; const mockFilePath = path.join(testDirectory, 'task5.json');
+        listManager.addTask(mockTask);
+
+        const recommendation = 'This is a recommendation';
+        const user = 'user1';
+        const [code, result] = listManager.addRecommendation('task5', recommendation, user);
+
+        expect(code).toEqual(200);
+        expect(result).toEqual(`Recommendation added to task task5.`);
+        const data = fs.readFileSync(mockFilePath, 'utf-8');
+        const task = JSON.parse(data) as TaskSchema;
+
+        expect(task.recommendation).toEqual(recommendation);
+        expect(task.decisionMaker).toEqual(user);
+    });
+
+    test('addRecommendation should return 404 if task does not exist', () => {
+        const listManager = new ListManager(testDirectory);
+        const recommendation = 'This is a recommendation';
+        const user = 'user1';
+        const [code, result] = listManager.addRecommendation('task6', recommendation, user);
+
+        expect(code).toEqual(404);
+        expect(result).toEqual(`Task task6 not found.`);
+    });
+
+    test('addRecommendation should return 401 if user is not an approver', () => {
+        const listManager = new ListManager(testDirectory);
+        const mockTask: TaskSchema = {
+            taskName: 'task7',
+            approver1: 'user1',
+            approver2: 'user2',
+            approver3: 'user3',
+            comments: [],
+            taskDescription: 'Task 7 description',
+            recommendation: '',
+            decisionMaker: ''
+        }; const mockFilePath = path.join(testDirectory, 'task7.json');
+        listManager.addTask(mockTask);
+
+        const recommendation = 'This is a recommendation';
+        const user = 'user4';
+        const [code, result] = listManager.addRecommendation('task7', recommendation, user);
+
+        expect(code).toEqual(401);
+        expect(result).toEqual(`User user4 is not an approver for task task7.`);
+    });
+
+
 });

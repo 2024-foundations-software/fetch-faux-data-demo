@@ -86,6 +86,23 @@ class ListManager {
         return [200, `Comment added to task ${taskName}.`];
     }
 
+    public addRecommendation(taskName: string, recommendation: string, user: string): [number, string] {
+        const filePath = path.join(this.directory, `${taskName}.json`);
+        if (fs.existsSync(filePath)) {
+            const task = this.readJsonFile(filePath);
+            if (task && (task.approver1 === user || task.approver2 === user || task.approver3 === user)) {
+                // Add the recommendation to the task
+                task.recommendation = recommendation;
+                task.decisionMaker = user;
+                this.writeJsonFile(filePath, task);
+                return [200, `Recommendation added to task ${taskName}.`];
+            } else {
+                return [401, `User ${user} is not an approver for task ${taskName}.`];
+            }
+        }
+        return [404, `Task ${taskName} not found.`];
+    }
+
 
 }
 
