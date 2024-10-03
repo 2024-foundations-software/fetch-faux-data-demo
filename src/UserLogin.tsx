@@ -29,11 +29,9 @@ const UserLogin: React.FC = () => {
     };
 
     return (
-        <Container maxWidth="sm">
-            <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="100vh">
-                <Typography variant="h4" gutterBottom>
-                    Login
-                </Typography>
+
+        <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="flex-start" p={2}>
+            <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" >
                 <form onSubmit={handleFormSubmit}>
                     <TextField
                         label="Username"
@@ -53,7 +51,7 @@ const UserLogin: React.FC = () => {
                     {snackbarMessage}
                 </Alert>
             </Snackbar>
-        </Container>
+        </Box>
     );
 };
 
