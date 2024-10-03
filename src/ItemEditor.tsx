@@ -60,9 +60,20 @@ const ItemEditor: React.FC = () => {
 
     const handleRecommendationChange = (e: SelectChangeEvent) => {
         if (task) {
-            task.recommendation = e.target.value as TaskSchema['recommendation'];
-            task.decisionMaker = user;
-            setTask({ ...task, recommendation: e.target.value as TaskSchema['recommendation'] });
+            const recommendation = e.target.value as string;
+            fetch(`http://localhost:3500/tasks/${task.taskName}/recommendation`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ recommendation, user })
+            })
+                .then(response => {
+                    updateTask();
+                })
+                .catch(error => {
+                    setError(error.message);
+                });
         }
     };
 
