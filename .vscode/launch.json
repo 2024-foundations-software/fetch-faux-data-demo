@@ -18,9 +18,16 @@
         },
         {
             "type": "node-terminal",
-            "name": "Jest ListManager",
+            "name": "Test ListManager",
             "request": "launch",
             "command": "npx jest ListManager",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "node-terminal",
+            "name": "Coverage ListManager",
+            "request": "launch",
+            "command": "npx jest --coverage ListManager",
             "cwd": "${workspaceFolder}"
         },
         {

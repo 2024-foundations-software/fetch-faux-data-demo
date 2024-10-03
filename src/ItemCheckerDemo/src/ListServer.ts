@@ -43,6 +43,14 @@ app.post('/tasks/:taskName/comments', (req, res) => {
     res.status(code).send(result);
 });
 
+// Clear all the comments for a task
+app.delete('/tasks/:taskName/comments', (req, res) => {
+    const { taskName } = req.params;
+    const { user } = req.body;
+    const [code, result] = listManager.clearComments(taskName, user);
+    res.status(code).send(result);
+});
+
 // Add a recommendation to a task
 app.post('/tasks/:taskName/recommendation', (req, res) => {
     const { taskName } = req.params;

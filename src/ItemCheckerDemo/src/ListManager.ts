@@ -103,6 +103,21 @@ class ListManager {
         return [404, `Task ${taskName} not found.`];
     }
 
+    public clearComments(taskName: string, user: string): [number, string] {
+        const filePath = path.join(this.directory, `${taskName}.json`);
+        if (fs.existsSync(filePath)) {
+            const task = this.readJsonFile(filePath);
+            if (task && (task.approver1 === user || task.approver2 === user || task.approver3 === user)) {
+                task.comments = [];
+                this.writeJsonFile(filePath, task);
+                return [200, `Comments cleared for task ${taskName}.`];
+            } else {
+                return [401, `User ${user} is not an approver for task ${taskName}.`];
+            }
+        }
+        return [404, `Task ${taskName} not found.`];
+    }
+
 
 }
 

@@ -5,6 +5,7 @@ import Cities from './Cities';
 import EventTable from './EventTable';
 import ItemCreator from './ItemCreator';
 import ItemEditor from './ItemEditor';
+import UserLogin from './UserLogin';
 
 /**
  * The ControlPanel component is the main component that manages the state and logic
@@ -87,8 +88,9 @@ const ControlPanel: React.FC = () => {
                 <Tab label="Donors" />
                 <Tab label="Event Set Up" />
                 <Tab label="Event Review" />
-                <Tab label="Item Checker" />
+                <Tab label="Item Creator" />
                 <Tab label="Item Editor" />
+                <Tab label="User Login" />
             </Tabs>
 
             {/* Render the content based on the selected tab */}
@@ -151,6 +153,12 @@ const ControlPanel: React.FC = () => {
                     <ItemEditor />
                 </Box>
             )};
+
+            {tabIndex === 5 && (
+                <Box mt={4}>
+                    <UserLogin />
+                </Box>
+            )}
         </Box>
     )
 }
