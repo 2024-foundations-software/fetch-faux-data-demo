@@ -27,7 +27,7 @@
             "type": "node-terminal",
             "name": "Test ListManagerSQL",
             "request": "launch",
-            "command": "npx jest ListManagerSQL",
+            "command": "ts-node src/ItemCheckerDemo/tests/TestSQLManager.ts",
             "cwd": "${workspaceFolder}"
         },
         {

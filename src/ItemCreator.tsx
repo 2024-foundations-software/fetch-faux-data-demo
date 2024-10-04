@@ -39,7 +39,7 @@ const ItemCreator: React.FC = () => {
 
 
 
-    const updateTasks = (tasks: TaskSchema) => {
+    const updateTasks = (tasks: TaskSchema[]) => {
         console.log(tasks);
         setTasks(tasks);
     }

@@ -113,6 +113,10 @@ const ItemEditor: React.FC = () => {
             return;
         }
         try {
+            if (!task) {
+                setError('No task found');
+                return;
+            }
             const response = await fetch(`http://localhost:3500/tasks/${task.taskName}/comments`, {
                 method: 'DELETE',
                 headers: {
