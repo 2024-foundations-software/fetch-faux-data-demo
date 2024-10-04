@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Container, Typography, List, ListItem, ListItemText, Paper, Box } from '@mui/material';
-import { TaskSchema } from './TaskSchema';
+import { TaskSchema } from './ItemCheckerDemo/src/TaskSchema';
 
 const ItemCreator: React.FC = () => {
     const [task, setTask] = useState<TaskSchema>({
@@ -9,7 +9,9 @@ const ItemCreator: React.FC = () => {
         approver2: '',
         approver3: '',
         comments: [],
-        taskDescription: ''
+        taskDescription: '',
+        recommendation: '',
+        decisionMaker: '',
     });
 
 

@@ -25,6 +25,13 @@
         },
         {
             "type": "node-terminal",
+            "name": "Test ListManagerSQL",
+            "request": "launch",
+            "command": "npx jest ListManagerSQL",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "node-terminal",
             "name": "Coverage ListManager",
             "request": "launch",
             "command": "npx jest --coverage ListManager",

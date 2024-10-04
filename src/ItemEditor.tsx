@@ -7,7 +7,7 @@ import {
     Box, Divider
 } from '@mui/material';
 
-import { TaskSchema } from './TaskSchema';
+import { TaskSchema } from './ItemCheckerDemo/src/TaskSchema'
 
 const ItemEditor: React.FC = () => {
     const [task, setTask] = useState<TaskSchema | null>(null);
@@ -163,37 +163,37 @@ const ItemEditor: React.FC = () => {
                     <TableBody>
                         <TableRow>
                             <TableCell>Task Name</TableCell>
-                            <TableCell>{task.taskName}</TableCell>
+                            <TableCell>{task ? task.taskName : ''}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Approver 1</TableCell>
-                            <TableCell>{task.approver1}</TableCell>
+                            <TableCell>{task ? task.approver1 : ''}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Approver 2</TableCell>
-                            <TableCell>{task.approver2}</TableCell>
+                            <TableCell>{task ? task.approver2 : ''}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Approver 3</TableCell>
-                            <TableCell>{task.approver3}</TableCell>
+                            <TableCell>{task ? task.approver3 : ''}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Task Description</TableCell>
-                            <TableCell>{task.taskDescription}</TableCell>
+                            <TableCell>{task ? task.taskDescription : ''}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Recommendation</TableCell>
-                            <TableCell>{task.recommendation}</TableCell>
+                            <TableCell>{task ? task.recommendation : ''}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Decision Maker</TableCell>
-                            <TableCell>{task.decisionMaker}</TableCell>
+                            <TableCell>{task ? task.decisionMaker : ''}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Comments</TableCell>
                             <TableCell>
                                 <ul style={{ listStyleType: 'none', padding: 0 }}>
-                                    {task.comments && Array.isArray(task.comments) ? (
+                                    {task && task.comments && Array.isArray(task.comments) ? (
                                         task.comments.map((comment: string, index: React.Key | null | undefined) => (
                                             <li key={index}>{formatComment(comment)}</li>
                                         ))
