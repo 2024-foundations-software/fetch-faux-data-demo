@@ -25,9 +25,9 @@
         },
         {
             "type": "node-terminal",
-            "name": "Test ListManagerSQL",
+            "name": "Test SQL Container",
             "request": "launch",
-            "command": "ts-node src/ItemCheckerDemo/tests/TestSQLManager.ts",
+            "command": "npx jest SQLiteContainer",
             "cwd": "${workspaceFolder}"
         },
         {
@@ -35,6 +35,13 @@
             "name": "Coverage ListManager",
             "request": "launch",
             "command": "npx jest --coverage ListManager",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "node-terminal",
+            "name": "Coverage SQL Container",
+            "request": "launch",
+            "command": "npx jest --coverage SQLiteContainer",
             "cwd": "${workspaceFolder}"
         },
         {

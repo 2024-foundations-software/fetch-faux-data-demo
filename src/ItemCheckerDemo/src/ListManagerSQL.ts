@@ -89,29 +89,54 @@ class ListManagerSQL {
         });
     }
 
-    // // Add a comment to a task if the user is an approver
-    // public addComment(taskName: string, comment: string, user: string): [number, string] {
-    //     const taskResult = this.db.prepare('SELECT * FROM tasks WHERE taskName = ?').get(taskName);
+    // Add a comment to a task if the user is an approver
+    public async addComment(taskName: string, comment: string, user: string): Promise<[number, string]> {
 
-    //     // if the task exists convert it to task object
 
-    //     const task = taskResult ? {
-    //         taskName: taskResult.taskName,
-    //         approver1: taskResult.approver1,
-    //         approver2: taskResult.approver2,
-    //         approver3: taskResult.approver3
-    //     } : undefined;
-    //     if (task) {
-    //         if (task.approver1 === user || task.approver2 === user || task.approver3 === user) {
-    //             this.db.prepare('INSERT INTO comments (taskName, comment, user) VALUES (?, ?, ?)').run(taskName, comment, user);
-    //             return [200, `Comment added to task ${taskName}.`];
-    //         } else {
-    //             return [401, `User ${user} is not an approver for task ${taskName}.`];
-    //         }
-    //     } else {
-    //         return [404, `Task ${taskName} not found.`];
-    //     }
-    // }
+
+        try {
+            sqlite3.verbose();
+            console.log(`Adding to task ${taskName}: ${comment} by ${user}`);
+
+            // get the task and check for the user permissions
+
+            const result = await new Promise<[number, string]>((resolve, reject) => {
+                if (!this.db) {
+                    reject([500, 'Database not open.']);
+                }
+
+                const task = await this.getTask(taskName);
+
+                if (task[0] !== 200) {
+                    resolve([task[0], task[1] as string]);
+                }
+
+                const taskData = task[1] as TaskSchema;
+
+                if (taskData.approver1 !== user && taskData.approver2 !== user && taskData.approver3 !== user) {
+                    resolve([401, `User ${user} is not an approver for task ${taskName}.`]);
+                }
+
+                const stmt = this.db!.prepare('INSERT INTO comments (taskName, comment, user) VALUES (?, ?, ?)');
+                stmt.run(taskName, comment, user, (err: Error | null) => {
+                    if (err) {
+                        console.error('Error inserting comment:', err.message);
+                        resolve([500, `An error occurred: ${err.message}`]);
+                    } else {
+                        console.log(`Comment added to task ${taskName}.`);
+                        resolve([200, `Comment added to task ${taskName}.`]);
+                    }
+                });
+            });
+
+            return result
+
+        }
+        catch (error) {
+            console.error('Error preparing statement:', (error as Error).message);
+            return [500, `An error occurred: ${(error as Error).message}`];
+        }
+    }
 
     // public addRecommendation(taskName: string, recommendation: string, user: string): [number, string] {
     //     const task = this.db.prepare('SELECT * FROM tasks WHERE taskName = ?').get(taskName);
