@@ -1,6 +1,6 @@
 import { TaskSchema } from '../../types';
 import { runTaskManagerTests } from './TaskManagerTestRunner';
-import { ListManager } from '../src/JSONFileContainer';
+import JSONFileContainer from '../src/JSONFileContainer';
 
 import * as fs from 'fs';
 import * as path from 'path';
@@ -58,7 +58,7 @@ afterAll(() => {
 // testing the functionality of the class.
 describe('ListManagerImplementation', () => {
     test('constructor should create a directory for the database', () => {
-        const listManager = new ListManager('database1');
+        const listManager = new JSONFileContainer('database1');
 
         const expectedDBLocation = path.join(databaseRootLocation, 'database1');
         expect(fs.existsSync(expectedDBLocation)).toBeTruthy();
@@ -68,4 +68,4 @@ describe('ListManagerImplementation', () => {
 
 
 
-runTaskManagerTests((name: string) => new ListManager(name));
+runTaskManagerTests((name: string) => new JSONFileContainer(name));
