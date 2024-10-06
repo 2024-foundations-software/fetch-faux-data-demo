@@ -80,6 +80,16 @@ The `DonorTable` component displays donor-related data in a table format.  This 
 
 The `EventTable` component displays event-related data in a table format.  This displays all of the donors who might potentially attend an event in a city, or a number of cities.
 
+# Building your own server.
+
+In the directory `ItemCheckerDemo` there is a simple server that can be used to serve the data for the application.  This server is written in typescript and uses the express framework.  
+
+I have provided two implementations of the database for the server.  the first is a JSONFileContainer and the other is a SQLiteContainer.  The JSONFileContainer is a simple implementation that reads and writes to a JSON file.  The SQLiteContainer is a more robust implementation that uses a SQLite database to store the data.  The SQLiteContainer is the default implementation.
+
+The client has been updated to illustrate these changes.  The client now has a new tab called `Item Creator` that allows you to create new items in the database.  The client also has a new tab called `Item Editor` that allows you to edit items in the database. and there is a user login tab.   The user login tab is functional in that it allows you to specify a user name and it gets stored in sessionStorage.  Because the user is stored in sessionStorage you can experiment with different users by opening the application in different tabs.
+
+The launch.json file has been updated to include a launch configuration for the server.  This allows you to start the server from within Visual Studio Code.
+
 ### Disclaimer
 
 This code is provided as is.  It is intended for educational purposes only and should not be used in production environments without proper testing and validation.
