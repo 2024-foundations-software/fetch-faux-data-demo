@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
-import { TaskSchema } from './TaskSchema';
+import { TaskSchema } from '../../types';
 
 /**
  * Interface representing the structure of a task with associated comments.
@@ -32,7 +32,7 @@ class SQLiteContainer {
      */
     constructor(database: string) {
         const dataPath = path.join(__dirname, '..');
-        this.dbFilename = path.join(dataPath, database);
+        this.dbFilename = path.join(dataPath, database + '.db');
         console.log(`Database file path: ${this.dbFilename}`);
 
         // Check if the database file exists

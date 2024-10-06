@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Container, Typography, List, ListItem, ListItemText, Paper, Box } from '@mui/material';
-import { TaskSchema } from './ItemCheckerDemo/src/TaskSchema';
+import { TaskSchema } from './types';
 
 const ItemCreator: React.FC = () => {
     const [task, setTask] = useState<TaskSchema>({
@@ -41,6 +41,7 @@ const ItemCreator: React.FC = () => {
 
     const updateTasks = (tasks: TaskSchema[]) => {
         console.log(tasks);
+
         setTasks(tasks);
     }
 
@@ -76,6 +77,7 @@ const ItemCreator: React.FC = () => {
                 // Fetch updated tasks list
                 fetch('http://localhost:3500/tasks')
                     .then(response => response.json())
+
                     .then(data => updateTasks(data));
             })
             .catch(error => {

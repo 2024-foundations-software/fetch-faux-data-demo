@@ -1,18 +1,30 @@
-import { TaskSchema } from './TaskSchema';
+import { TaskSchema } from '../../types';
 import * as fs from 'fs';
 import * as path from 'path';
 
 
-class ListManager {
-    private directory: string;
+class JSONFileContainer {
+    private databaseLocation: string;
+    private databaseRootLocation: string = path.join(__dirname, '..', 'jsonDB');
+
 
     // Initialize the ListManager object with the directory where the task files are stored
-    constructor(directory: string = path.join(__dirname, 'fetch-faux-data-demo', 'documents')) {
-        // Create the directory if it does not exist
-        if (!fs.existsSync(directory)) {
-            fs.mkdirSync(directory);
+    constructor(databaseName: string) {
+
+        /**
+         * Create the databaseLocation directory if it does not exist
+         * This is where the database directories will be created.
+         */
+        if (!fs.existsSync(this.databaseRootLocation)) {
+            fs.mkdirSync(this.databaseRootLocation);
         }
-        this.directory = directory;
+
+        this.databaseLocation = path.join(this.databaseRootLocation, databaseName);
+        // Create the directory if it does not exist
+        if (!fs.existsSync(this.databaseLocation)) {
+            fs.mkdirSync(this.databaseLocation);
+        }
+
     }
 
     // Read a JSON file and parse it into a TaskSchema object
@@ -36,25 +48,30 @@ class ListManager {
     }
 
     // Get all tasks
-    public getAllTasks(): TaskSchema[] {
-        const files = fs.readdirSync(this.directory);
-        return files
+    public getAllTasks(): [number, TaskSchema[] | string] {
+        if (!fs.existsSync(this.databaseLocation)) {
+            return [404, 'No tasks found.'];
+        }
+        const files = fs.readdirSync(this.databaseLocation);
+
+        const tasks = files
             .filter(file => file.endsWith('.json'))
-            .map(file => this.readJsonFile(path.join(this.directory, file)))
+            .map(file => this.readJsonFile(path.join(this.databaseLocation, file)))
             .filter(task => task !== null) as TaskSchema[];
+        return [200, tasks];
     }
 
     public addTask(task: TaskSchema): [number, string] {
-        const filePath = path.join(this.directory, `${task.taskName}.json`);
+        const filePath = path.join(this.databaseLocation, `${task.taskName}.json`);
         if (fs.existsSync(filePath)) {
             return [409, `Task ${task.taskName} already exists.`];
         }
         this.writeJsonFile(filePath, task);
-        return [201, 'Task added successfully.'];
+        return [200, `Task ${task.taskName} added.`];
     }
 
     public getTask(taskName: string, user: string): [number, TaskSchema | string] {
-        const filePath = path.join(this.directory, `${taskName}.json`);
+        const filePath = path.join(this.databaseLocation, `${taskName}.json`);
 
         if (fs.existsSync(filePath)) {
             // check to see if the user is an approver
@@ -70,7 +87,7 @@ class ListManager {
 
     // Add a comment to a task if the user is an approver
     public addComment(taskName: string, comment: string, user: string): [number, string] {
-        const filePath = path.join(this.directory, `${taskName}.json`);
+        const filePath = path.join(this.databaseLocation, `${taskName}.json`);
         if (fs.existsSync(filePath)) {
             const task = this.readJsonFile(filePath);
             if (task && (task.approver1 === user || task.approver2 === user || task.approver3 === user)) {
@@ -87,7 +104,7 @@ class ListManager {
     }
 
     public addRecommendation(taskName: string, recommendation: string, user: string): [number, string] {
-        const filePath = path.join(this.directory, `${taskName}.json`);
+        const filePath = path.join(this.databaseLocation, `${taskName}.json`);
         if (fs.existsSync(filePath)) {
             const task = this.readJsonFile(filePath);
             if (task && (task.approver1 === user || task.approver2 === user || task.approver3 === user)) {
@@ -104,7 +121,7 @@ class ListManager {
     }
 
     public clearComments(taskName: string, user: string): [number, string] {
-        const filePath = path.join(this.directory, `${taskName}.json`);
+        const filePath = path.join(this.databaseLocation, `${taskName}.json`);
         if (fs.existsSync(filePath)) {
             const task = this.readJsonFile(filePath);
             if (task && (task.approver1 === user || task.approver2 === user || task.approver3 === user)) {
@@ -121,4 +138,4 @@ class ListManager {
 
 }
 
-export { ListManager };
+export default JSONFileContainer;

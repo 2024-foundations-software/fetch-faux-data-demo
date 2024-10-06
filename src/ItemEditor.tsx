@@ -7,7 +7,7 @@ import {
     Box, Divider
 } from '@mui/material';
 
-import { TaskSchema } from './ItemCheckerDemo/src/TaskSchema'
+import { TaskSchema } from './types';
 
 const ItemEditor: React.FC = () => {
     const [task, setTask] = useState<TaskSchema | null>(null);
@@ -109,7 +109,11 @@ const ItemEditor: React.FC = () => {
     const handleClearComments = async () => {
 
         // ask the user to confirm
-        if (!window.confirm('Are you sure you want to clear all comments?')) {
+        if (!window.confirm('Are you sure you want to clear all comments?\n' +
+            'This action cannot be undone.\n\n' +
+            'And by the way\n' +
+            'This should not be implemented in production except by a super admin.'
+        )) {
             return;
         }
         try {

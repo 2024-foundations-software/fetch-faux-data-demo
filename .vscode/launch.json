@@ -4,8 +4,9 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        // run the client
         {
-            "name": "Run npm run dev",
+            "name": "Demo Client",
             "type": "node",
             "request": "launch",
             "runtimeExecutable": "npm",
@@ -16,11 +17,20 @@
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal"
         },
+        // run the server
         {
             "type": "node-terminal",
-            "name": "Test ListManager",
+            "name": "Demo Task Server",
             "request": "launch",
-            "command": "npx jest ListManager",
+            "command": "ts-node src/ItemCheckerDemo/src/TaskRestServer.ts",
+            "cwd": "${workspaceFolder}"
+        },
+        // test suites
+        {
+            "type": "node-terminal",
+            "name": "Test JSON Container",
+            "request": "launch",
+            "command": "npx jest JSONFileContainer",
             "cwd": "${workspaceFolder}"
         },
         {
@@ -32,9 +42,9 @@
         },
         {
             "type": "node-terminal",
-            "name": "Coverage ListManager",
+            "name": "Coverage File Container",
             "request": "launch",
-            "command": "npx jest --coverage ListManager",
+            "command": "npx jest --coverage JSONFileContainer",
             "cwd": "${workspaceFolder}"
         },
         {
@@ -42,13 +52,6 @@
             "name": "Coverage SQL Container",
             "request": "launch",
             "command": "npx jest --coverage SQLiteContainer",
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "type": "node-terminal",
-            "name": "Run Checker server",
-            "request": "launch",
-            "command": "ts-node src/ItemCheckerDemo/src/ListServer.ts",
             "cwd": "${workspaceFolder}"
         },
     ]
