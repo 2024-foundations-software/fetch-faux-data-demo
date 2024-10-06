@@ -1,4 +1,4 @@
-import { TaskSchema } from '../../types';
+import { TaskSchema } from 'types';
 import * as fs from 'fs';
 import * as path from 'path';
 

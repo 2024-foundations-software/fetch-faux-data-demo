@@ -7,7 +7,7 @@ import {
     Box, Divider
 } from '@mui/material';
 
-import { TaskSchema } from './types';
+import { TaskSchema } from 'types';
 
 const ItemEditor: React.FC = () => {
     const [task, setTask] = useState<TaskSchema | null>(null);

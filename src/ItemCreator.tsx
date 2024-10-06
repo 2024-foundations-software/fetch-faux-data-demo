@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Container, Typography, List, ListItem, ListItemText, Paper, Box } from '@mui/material';
-import { TaskSchema } from './types';
+import { TaskSchema } from 'types';
 
 const ItemCreator: React.FC = () => {
     const [task, setTask] = useState<TaskSchema>({

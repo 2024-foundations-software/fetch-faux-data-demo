@@ -11,6 +11,11 @@
             "node",
             "jest"
         ],
+        // Other compiler options...
+        "typeRoots": [
+            "./src",
+            "./node_modules/@types"
+        ],
         "module": "commonjs",
         "allowJs": true,
         "skipLibCheck": true,
