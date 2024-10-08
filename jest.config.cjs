@@ -8,6 +8,7 @@ module.exports = {
   },
   moduleNameMapper: {
     '\\.css$': 'identity-obj-proxy'
-  }
+  },
+  maxWorkers: 1,
 
 };

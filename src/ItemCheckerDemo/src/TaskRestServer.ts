@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import JSONFileContainer from './JSONFileContainer';
 import SQLiteContainer from './SQLiteContainer';
-import { TaskSchema } from '../../types';
+import { TaskSchema } from 'types';
 import path from 'path';
 
 const app = express();

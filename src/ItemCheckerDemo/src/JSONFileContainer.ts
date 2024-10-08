@@ -1,5 +1,6 @@
 import { TaskSchema } from 'types';
-import * as fs from 'fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from './file-utils';
+import fs from 'fs';
 import * as path from 'path';
 
 
@@ -15,43 +16,49 @@ class JSONFileContainer {
          * Create the databaseLocation directory if it does not exist
          * This is where the database directories will be created.
          */
-        if (!fs.existsSync(this.databaseRootLocation)) {
-            fs.mkdirSync(this.databaseRootLocation);
+        // this is the root location of the database and should be set up in the system
+        // install.  
+        if (!existsSync(this.databaseRootLocation)) {
+            mkdirSync(this.databaseRootLocation);
         }
 
         this.databaseLocation = path.join(this.databaseRootLocation, databaseName);
         // Create the directory if it does not exist
-        if (!fs.existsSync(this.databaseLocation)) {
-            fs.mkdirSync(this.databaseLocation);
+        if (!existsSync(this.databaseLocation)) {
+            mkdirSync(this.databaseLocation);
         }
 
     }
 
     // Read a JSON file and parse it into a TaskSchema object
+    // we have a guard on all calls to this such that the file exists.
     private readJsonFile(filePath: string): TaskSchema | null {
         try {
-            const data = fs.readFileSync(filePath, 'utf-8');
+            const data = readFileSync(filePath);
             return JSON.parse(data) as TaskSchema;
-        } catch (error) {
-            console.error(`Error reading file ${filePath}:`, error);
+        } catch {
+            console.error(`Error reading file ${filePath}`);
             return null;
         }
+
     }
 
     // Write a TaskSchema object to a JSON file
+    // if the file write fails we have larger issues than the task not being written
+    // this is guarded by the creation of the directory in the constructor
     private writeJsonFile(filePath: string, data: TaskSchema): void {
         try {
-            fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+            writeFileSync(filePath, JSON.stringify(data, null, 2));
         } catch (error) {
             console.error(`Error writing file ${filePath}:`, error);
+            throw error;
         }
     }
 
     // Get all tasks
+    // database exists since we have a guard on the constructor
     public getAllTasks(): [number, TaskSchema[] | string] {
-        if (!fs.existsSync(this.databaseLocation)) {
-            return [404, 'No tasks found.'];
-        }
+
         const files = fs.readdirSync(this.databaseLocation);
 
         const tasks = files
@@ -63,10 +70,15 @@ class JSONFileContainer {
 
     public addTask(task: TaskSchema): [number, string] {
         const filePath = path.join(this.databaseLocation, `${task.taskName}.json`);
-        if (fs.existsSync(filePath)) {
+        if (existsSync(filePath)) {
             return [409, `Task ${task.taskName} already exists.`];
         }
-        this.writeJsonFile(filePath, task);
+        try {
+            this.writeJsonFile(filePath, task);
+        } catch (error) {
+            return [500, `Error writing file: ${error}`];
+        }
+
         return [200, `Task ${task.taskName} added.`];
     }
 
@@ -74,13 +86,13 @@ class JSONFileContainer {
         const filePath = path.join(this.databaseLocation, `${taskName}.json`);
 
         if (fs.existsSync(filePath)) {
-            // check to see if the user is an approver
-            const task = this.readJsonFile(filePath);
 
+            const task = this.readJsonFile(filePath);
             if (!task) {
-                return [404, `Task ${taskName} not found.`];
+                return [500, 'Error reading file.'];
             }
-            return [200, task];
+
+            return [200, task!];
         }
         return [404, `Task ${taskName} not found.`];
     }
@@ -100,7 +112,7 @@ class JSONFileContainer {
         } else {
             return [404, `Task ${taskName} not found.`];
         }
-        return [200, `Comment added to task ${taskName}.`];
+
     }
 
     public addRecommendation(taskName: string, recommendation: string, user: string): [number, string] {

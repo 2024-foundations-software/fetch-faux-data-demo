@@ -268,6 +268,14 @@ export function runTaskManagerTests(createTaskManager: (name: string) => TaskMan
             expect(task2.decisionMaker).toBe('');
         });
 
+        test('getAllTasks should return an empty array if there are no tasks', () => {
+            const listManager = createTaskManager('test_db_99.db');
+            const [code, result] = listManager.getAllTasks() as [number, TaskSchema[]];
+
+            expect(code).toBe(200);
+            expect(result.length).toBe(0);
+        });
+
 
 
         /**
