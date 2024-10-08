@@ -24,7 +24,9 @@ function deleteDirectoryRecursively(dirPath: string) {
     if (fs.existsSync(dirPath)) {
         // Iterate through all files and subdirectories in the directory
         fs.readdirSync(dirPath).forEach((file) => {
+
             const filePath = path.join(dirPath, file);
+
             if (fs.lstatSync(filePath).isDirectory()) {
                 // Recursively delete files in the subdirectory
                 deleteDirectoryRecursively(filePath);
@@ -45,6 +47,10 @@ const clearTestDatabases = () => {
     if (fs.existsSync(databaseRootLocation)) {
         const files = fs.readdirSync(databaseRootLocation);
         files.forEach((file) => {
+            // check to see if the file starts with test_db
+            if (!file.startsWith('test_db')) {
+                return;
+            }
             const filePath = path.join(databaseRootLocation, file);
             deleteDirectoryRecursively(filePath);
         });
@@ -58,7 +64,10 @@ beforeAll(() => {
 
 // Run after all tests to perform any necessary cleanup (currently empty)
 afterAll(() => {
-
+    // wait 5 seconds then clear the databases
+    setTimeout(() => {
+        clearTestDatabases();
+    }, 5000);
 });
 
 // Tests for verifying the implementation details of the JSONFileContainer class
@@ -108,7 +117,7 @@ describe('JSONFileContainer Constructor', () => {
         // Restore original implementations for this test
         existsSyncMock.mockRestore();
         mkdirSyncMock.mockRestore();
-        jsonFileContainer = new JSONFileContainer('missingFileDB');
+        jsonFileContainer = new JSONFileContainer('test_db_missingFileDB');
         jsonFileContainer.addTask({
             taskName: 'task1',
             approver1: 'approver1',
@@ -136,7 +145,7 @@ describe('JSONFileContainer Constructor', () => {
         // Restore original implementations for this test
         existsSyncMock.mockRestore();
         mkdirSyncMock.mockRestore();
-        jsonFileContainer = new JSONFileContainer('missingFileDB2');
+        jsonFileContainer = new JSONFileContainer('test_db_missingFileDB2');
         // Mock the writeFileSync function to throw an error
         const writeFileSyncMock = jest.spyOn(fileUtils, 'writeFileSync').mockImplementation(() => {
             throw new Error('Error writing file');
