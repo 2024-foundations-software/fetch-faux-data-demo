@@ -15,6 +15,7 @@ dist-ssr
 **/testdocuments/*
 **/jsonDB/*
 **/coverage/*
+**/venv/*
 
 # Editor directories and files
 !.vscode/extensions.json

@@ -54,5 +54,21 @@
             "command": "npx jest --coverage SQLiteContainer",
             "cwd": "${workspaceFolder}"
         },
+        // run the Flask server with debugpy
+        {
+            "name": "Run Flask Server with debugpy",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/pythonserver/FlaskTaskManagerServer.py",
+            "python": "${workspaceFolder}/venv/bin/python",
+            "env": {
+                "FLASK_APP": "pythonserver.FlaskTaskManagerServer",
+                "FLASK_ENV": "development"
+            },
+            "console": "integratedTerminal",
+            "args": [
+                "-Xfrozen_modules=off"
+            ]
+        }
     ]
 }
