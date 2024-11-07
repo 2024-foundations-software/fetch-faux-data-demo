@@ -173,24 +173,4 @@ The addComment method in SQLiteContainer.ts adds a comment to a task. The method
     }
 ```
 
-### getting a task with comments
 
-```typescript
-// Add a comment to a task if the user is an approver
-    public addComment(taskName: string, comment: string, user: string): [number, string] {
-        const filePath = path.join(this.databaseLocation, `${taskName}.json`);
-        if (fs.existsSync(filePath)) {
-            const task = this.readJsonFile(filePath);
-            if (task && (task.approver1 === user || task.approver2 === user || task.approver3 === user)) {
-                task.comments.push(`${comment}:--:${user}`);
-                this.writeJsonFile(filePath, task);
-                return [200, `Comment added to task ${taskName}.`];;
-            } else {
-                return [401, `User ${user} is not an approver for task ${taskName}.`];
-            }
-        } else {
-            return [404, `Task ${taskName} not found.`];
-        }
-
-    }
-```
