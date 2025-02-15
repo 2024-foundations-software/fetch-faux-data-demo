@@ -22,7 +22,7 @@
             "type": "node-terminal",
             "name": "Demo Task Server",
             "request": "launch",
-            "command": "ts-node src/ItemCheckerDemo/src/TaskRestServer.ts",
+            "command": "npx ts-node src/ItemCheckerDemo/src/TaskRestServer.ts",
             "cwd": "${workspaceFolder}"
         },
         // test suites
